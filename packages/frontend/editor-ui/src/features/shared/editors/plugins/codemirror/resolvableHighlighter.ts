@@ -101,8 +101,10 @@ export const coloringStateField = StateField.define<DecorationSet>({
 
 			for (const txEffect of transaction.effects) {
 				if (txEffect.is(coloringStateEffects.removeColorEffect)) {
+					// Only drop the exact range being removed, not every decoration that
+					// shares a start or end position with it.
 					colorings = colorings.update({
-						filter: (from, to) => txEffect.value.from !== from && txEffect.value.to !== to,
+						filter: (from, to) => txEffect.value.from !== from || txEffect.value.to !== to,
 					});
 				}
 
